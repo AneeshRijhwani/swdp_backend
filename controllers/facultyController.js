@@ -105,17 +105,17 @@ async function searchComplaintsByRegNumber(req, res) {
     }
 }
 async function getAllComplaints(req, res) {
-
     try {
         const complaints = await Complaint.find();
-        if (!complaints) {
-            return res.status(404).json({ message: ' No Complaint found' });
+        if (!complaints || complaints.length === 0) {
+            return res.status(404).json({ message: 'No Complaint found' });
         }
-        res.status(200).json({ complaints });
+        res.status(200).json({ complaints:complaints.reverse() });
     } catch (error) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
 
 async function getStudentByRegNumber(req, res) {
     const { regNumber } = req.body;
