@@ -9,5 +9,6 @@ router.put('/complaints/:complaintId', facultyController.modifyComplaint);
 router.post('/complaints/student', facultyController.searchComplaintsByRegNumber);
 router.get('/complaints', facultyController.getAllComplaints)
 router.post('/student', facultyController.getStudentByRegNumber);
+router.get('/student/:regNumber', facultyController.getStudentDetailByRegNumber);
 
 module.exports = router;

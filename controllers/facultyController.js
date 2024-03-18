@@ -132,6 +132,22 @@ async function getStudentByRegNumber(req, res) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+async function getStudentDetailByRegNumber(req, res) {
+    const { regNumber } = req.params;
+    try {
+        // Find the student by registration number
+        const student = await Student.findOne({ regNumber: regNumber.toUpperCase() });
+
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+
+        // Send student data in the response
+        res.status(200).json(student);
+    } catch (error) {
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 
 module.exports = {
     createComplaint,
@@ -139,5 +155,6 @@ module.exports = {
     modifyComplaint,
     searchComplaintsByRegNumber,
     getStudentByRegNumber,
+    getStudentDetailByRegNumber,
     getAllComplaints
 };
