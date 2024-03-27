@@ -152,6 +152,17 @@ async function getComplaintByRegistrationNumber(req, res) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+async function getAllStudents(req, res) {
+    try {
+        const students = await Student.find();
+        if (!students || students.length === 0) {
+            return res.status(404).json({ message: 'No Complaint found' });
+        }
+        res.status(200).json({ students: students.reverse() });
+    } catch (error) {
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 async function getAllComplaints(req, res) {
     try {
         const complaints = await Complaint.find();
@@ -197,6 +208,7 @@ async function getStudentDetailByRegNumber(req, res) {
 module.exports = {
     createComplaint,
     addStudent,
+    getAllStudents,
     modifyComplaint,
     searchComplaintsByRegNumber,
     getStudentByRegNumber,
