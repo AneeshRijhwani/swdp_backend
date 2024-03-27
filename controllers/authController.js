@@ -154,13 +154,13 @@ async function verifyOTP(req, res) {
 }
 
 async function updatePassword(req, res) {
-    const { email, newPassword } = req.body;
+    const { empId, newPassword } = req.body;
 
     try {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-        await Faculty.findOneAndUpdate({ email }, { password: hashedPassword });
+        await Faculty.findOneAndUpdate({ empId }, { password: hashedPassword });
 
         res.status(200).json({ message: 'Password updated successfully' });
     } catch (error) {
