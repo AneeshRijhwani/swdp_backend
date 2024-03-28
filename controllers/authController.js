@@ -114,7 +114,7 @@ async function forgotPassword(req, res) {
             from: 'serviceComplaints@vitbhopal.ac.in',
             to: email,
             subject: 'Password Reset OTP',
-            text: `Your OTP for password reset is: ${otpValue}`,
+            text: `Dear User,\nYour OTP for password reset is: ${otpValue}.\n\nThank you for using the Student Welfare Discipline Portal.\n\nRegards,\nSupport - SWDPortal`,
         };
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
