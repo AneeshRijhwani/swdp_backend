@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const studentSchema = new mongoose.Schema({
-    regNumber: { type: String, unique: true, require: true },
+    regNumber: { type: String, unique: true, required: true },
     gender: { type: String },
-    name: { type: String, require: true },
-    email: { type: String, unique: true, require: true },
-    mobileNo: { type: String, unique: true, require: true },
+    name: { type: String, required: true },
+    email: { type: String, unique: true, required: true },
+    mobileNo: { type: String, required: true },
     complaints: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Complaint' }],
 });
 

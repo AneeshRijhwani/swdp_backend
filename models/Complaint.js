@@ -9,8 +9,10 @@ const complaintSchema = new mongoose.Schema({
     studentName: { type: String },
     studentMobileNo: { type: String },
     facultyName: { type: String },
-    status: { type: String, default: 'Pending' }, 
+    status: { type: String, default: 'Pending' },
     gender: { type: String },
+    remark: { type: String, required: false },
+    idCardStatus: {type: String },
     modifiedBy: [{ type: String }],
 });
 

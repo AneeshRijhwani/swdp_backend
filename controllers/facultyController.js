@@ -12,6 +12,8 @@ async function createComplaint(req, res) {
         facultyName,
         dateTime,
         gender,
+        remark,
+        IdCardStatus
     } = req.body;
     try {
         let student = await Student.findOne({ regNumber: registrationNumber.toUpperCase() });
@@ -37,6 +39,8 @@ async function createComplaint(req, res) {
             dateTime,
             email,
             gender,
+            remark,
+            idCardStatus:IdCardStatus,
             modifiedBy: []
         });
         await complaint.save();
@@ -52,7 +56,6 @@ async function createComplaint(req, res) {
 
 async function addStudent(req, res) {
     const { regNumber, name, mobileNo, email, gender } = req.body;
-
     try {
         const existingStudent = await Student.findOne({ $or: [{ regNumber: regNumber.toUpperCase() }, { email }] });
         if (existingStudent) {
@@ -71,13 +74,14 @@ async function addStudent(req, res) {
 
         res.status(201).json({ message: 'Student added successfully', student });
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: 'Internal server error' });
     }
 }
 
 async function modifyComplaint(req, res) {
     const { complaintId } = req.params;
-    const { title, description, status, modifiedBy } = req.body;
+    const { title, description, modifiedBy, IdCardStatus, remark } = req.body;
 
     try {
         const complaint = await Complaint.findByIdAndUpdate(
@@ -85,6 +89,8 @@ async function modifyComplaint(req, res) {
             {
                 title,
                 description,
+                idCardStatus:IdCardStatus,
+                remark,
                 $push: { modifiedBy } 
             },
             { new: true }
@@ -99,29 +105,37 @@ async function modifyComplaint(req, res) {
 
 async function resolveComplaint(req, res) {
     const { complaintId } = req.params;
-    const { title, description, modifiedBy } = req.body;
+    const { title, description, modifiedBy ,remark, IdCardStatus} = req.body;
     try {
-        const complaint = await Complaint.findByIdAndUpdate(
-            complaintId,
-            { 
-                status: 'Resolved',
-                title,
-                description,
-                $push: { modifiedBy } 
-            },
-            { new: true }
-        );
-
+        const complaint = await Complaint.findById(complaintId);
 
         if (!complaint) {
             return res.status(404).json({ message: 'Complaint not found' });
         }
 
-        res.status(200).json({ message: 'Complaint resolved successfully', complaint });
+        if (complaint.status === 'Resolved') {
+            return res.status(400).json({ message: 'Complaint is already resolved' });
+        }
+
+        const updatedComplaint = await Complaint.findByIdAndUpdate(
+            complaintId,
+            { 
+                status: 'Resolved',
+                title,
+                description,
+                remark,
+                idCardStatus: IdCardStatus,
+                $push: { modifiedBy } 
+            },
+            { new: true }
+        );
+
+        res.status(200).json({ message: 'Complaint resolved successfully', complaint: updatedComplaint });
     } catch (error) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
 
 async function searchComplaintsByRegNumber(req, res) {
     const { regNumber } = req.body;

@@ -79,7 +79,7 @@ async function resetPassword(req, res) {
 
 async function forgotPassword(req, res) {
 
-    const {empId} = req.body;
+    const { empId } = req.body;
 
     try {
         const faculty = await Faculty.findOne({ empId });
@@ -103,7 +103,7 @@ async function forgotPassword(req, res) {
             service: 'gmail',
             host: 'smtp.gmail.com',
             port: 537,
-            secure: false, 
+            secure: false,
             auth: {
                 user: process.env.SMTP_User,
                 pass: process.env.SMTP_Pass,
@@ -113,15 +113,23 @@ async function forgotPassword(req, res) {
         const mailOptions = {
             from: 'serviceComplaints@vitbhopal.ac.in',
             to: email,
-            subject: 'Password Reset OTP',
-            text: `Dear User,\nYour OTP for password reset is: ${otpValue}.\n\nThank you for using the Student Welfare Discipline Portal.\n\nRegards,\nSupport - SWDPortal`,
+            subject: 'SWD Portal | Password Reset OTP',
+            html: ` <div style="font-family: Arial, sans-serif; background-color: #f2f2f2; padding: 20px;">
+                    <h2 style="color: #333;">Password Reset OTP</h2>
+                    <p>Dear User,</p>
+                    <p>Your OTP for password reset is: <strong>${otpValue}</strong>.</p>
+                    <p>Thank you for using the Student Welfare Discipline Portal.</p>
+                    <p style="font-style: italic;">Regards,<br>Support Team - SWD Portal</p>
+                </div>`
         };
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 return res.status(500).json({ message: 'Failed to send OTP via email' });
             }
-            res.status(200).json({email,
-                 message: 'OTP sent to your email' });
+            res.status(200).json({
+                email,
+                message: 'OTP sent to your email'
+            });
         });
     } catch (error) {
         res.status(500).json({ message: 'Internal server error' });
@@ -142,7 +150,7 @@ async function verifyOTP(req, res) {
             return res.status(401).json({ message: 'Invalid OTP' });
         }
 
-        
+
         if (otpRecord.expiresAt < Date.now()) {
             return res.status(401).json({ message: 'OTP has expired' });
         }
