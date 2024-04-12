@@ -175,6 +175,24 @@ async function updatePassword(req, res) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+async function getUsers(req, res) {
+    try {
+        const users = await Faculty.find();
+        if (!users || users.length === 0) {
+            return res.status(404).json({ message: 'No User Exists' }); 
+        }
+        const mappedUsers = users.map(user => ({
+            name: user.name,
+            post: user.post,
+            empId: user.empId,
+            email: user.email
+        }));
+        res.status(200).json({ users: mappedUsers });
+    } catch (error) {
+        console.error(error); 
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 
 module.exports = {
     signup,
@@ -183,4 +201,5 @@ module.exports = {
     forgotPassword,
     verifyOTP,
     updatePassword,
+    getUsers
 };

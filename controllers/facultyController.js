@@ -40,7 +40,7 @@ async function createComplaint(req, res) {
             email,
             gender,
             remark,
-            idCardStatus:IdCardStatus,
+            idCardStatus: IdCardStatus,
             modifiedBy: []
         });
         await complaint.save();
@@ -89,9 +89,9 @@ async function modifyComplaint(req, res) {
             {
                 title,
                 description,
-                idCardStatus:IdCardStatus,
+                idCardStatus: IdCardStatus,
                 remark,
-                $push: { modifiedBy } 
+                $push: { modifiedBy }
             },
             { new: true }
         );
@@ -105,7 +105,7 @@ async function modifyComplaint(req, res) {
 
 async function resolveComplaint(req, res) {
     const { complaintId } = req.params;
-    const { title, description, modifiedBy ,remark, IdCardStatus} = req.body;
+    const { title, description, modifiedBy, remark, IdCardStatus } = req.body;
     try {
         const complaint = await Complaint.findById(complaintId);
 
@@ -119,13 +119,13 @@ async function resolveComplaint(req, res) {
 
         const updatedComplaint = await Complaint.findByIdAndUpdate(
             complaintId,
-            { 
+            {
                 status: 'Resolved',
                 title,
                 description,
                 remark,
                 idCardStatus: IdCardStatus,
-                $push: { modifiedBy } 
+                $push: { modifiedBy }
             },
             { new: true }
         );
